@@ -34,7 +34,23 @@ public class MapExamples {
 	    }
 	    
 	    public List<Map<String, String>> parseFile2(Path csvFile, Map<Integer, String> columnsNumberToNameMapping) {
-	        throw new UnsupportedOperationException("needs implemented");
+	    	
+	    	try(Scanner scanner = new Scanner(csvFile)) {
+	    		List<Map<String, String>> rows = new ArrayList<>();
+	    		while(scanner.hasNextLine()) {
+					String line = scanner.nextLine();
+					String[] partsOfLine = line.split(",");
+					Map<String,String> parsedRow = new HashMap<>();
+					for(Integer index : columnsNumberToNameMapping.keySet()) {
+						String columnName = columnsNumberToNameMapping.get(index);
+						parsedRow.put(columnName, partsOfLine[index]);;
+					}
+					rows.add(parsedRow);
+	    		}
+	    		return rows;
+			} catch (IOException e) {
+				throw new RuntimeException("Error processing file");
+			}
 	    }
 	    
 	    public static void main(String[] args) {
@@ -57,7 +73,7 @@ public class MapExamples {
 	        columnNumbersToNames.put(0, "id");
 	        columnNumbersToNames.put(1, "hours");
 	        columnNumbersToNames.put(2, "date");
-//	        System.out.println(collector.parseFile2(Paths.get("recorded-hours.dat"), columnNumbersToNames));
+	        System.out.println(collector.parseFile2(Paths.get("recorded-hours.dat"), columnNumbersToNames));
 	    }
 	
 	/* Sample output
